@@ -58,7 +58,7 @@ void write_matrix(const string& filename, const Matrix& matrix, const int& rows,
 
     out_file << "rows: " << rows << std::endl;
     out_file << "columns: " << columns << std::endl;
-    out_file << "time: " << time << " ms\n\n";
+    out_file << "time: " << time/1000 << " s\n\n";
 
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < columns; ++j) {
@@ -109,18 +109,18 @@ int main() {
     multiply_matrix(result, matrix1, matrix2, rows1, columns1, columns2);
     auto end = high_resolution_clock::now();
 
-    auto time = duration_cast<microseconds>(end - start).count();
+    auto time = duration_cast<milliseconds>(end - start).count();
 
     std::cout << "rows: " << result.size() << std::endl;
     std::cout << "columns: " << result[0].size() << std::endl;
-    std::cout << "time: " << time << " ms\n\n";
+    std::cout << "time: " << time/1000.0 << " s\n\n";
 
-    for (int i = 0; i < result.size(); ++i) {
-        for (int j = 0; j < result[i].size(); ++j) {
-            std::cout << result[i][j] << " ";
-        }
-        std::cout << std::endl;
-    }
+    // for (int i = 0; i < result.size(); ++i) {
+    //     for (int j = 0; j < result[i].size(); ++j) {
+    //         std::cout << result[i][j] << " ";
+    //     }
+    //     std::cout << std::endl;
+    // }
 
     write_matrix(PATH_RESULT, result, result.size(), result[0].size(), time);
 

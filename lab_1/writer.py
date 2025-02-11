@@ -1,9 +1,9 @@
 import numpy as np
 
-rows1, cols1 = 10, 5  # Размер матрицы (4x5)
+rows1, cols1 = 1000, 1000  # Размер матрицы (4x5)
 matrix1 = np.random.randint(0, 10, size=(rows1, cols1))
 
-rows2, cols2 = 5, 15  # Размер матрицы (4x5)
+rows2, cols2 = 1000, 1000  # Размер матрицы (4x5)
 matrix2 = np.random.randint(0, 10, size=(rows2, cols2))
 
 if cols1 != rows2:
