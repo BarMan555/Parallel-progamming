@@ -12,7 +12,7 @@ A = read_matrix('matrix1.txt', 1)
 B = read_matrix('matrix2.txt', 1)
 C_correct = np.dot(A, B)
 
-C_cpp = read_matrix('result.txt', 4)
+C_cpp = read_matrix('result.txt', 5)
 
 if np.allclose(C_cpp, C_correct, atol=1e-5):
     print("Results match!")
