@@ -9,9 +9,9 @@ using namespace std;
 using namespace chrono;
 
 typedef std::vector<vector<double>> Matrix;
-const string PATH_MATRIX1 = "C:/Users/boris/Desktop/parallel_programming/lab_1/matrix1.txt";
-const string PATH_MATRIX2 = "C:/Users/boris/Desktop/parallel_programming/lab_1/matrix2.txt";
-const string PATH_RESULT = "C:/Users/boris/Desktop/parallel_programming/lab_1/result.txt";
+const string PATH_MATRIX1 = "matrix1.txt";
+const string PATH_MATRIX2 = "matrix2.txt";
+const string PATH_RESULT = "result.txt";
 
 void read_matrix(const string& filename, Matrix& matrix) {
     std::ifstream file(filename);
@@ -48,7 +48,8 @@ void read_matrix(const string& filename, Matrix& matrix) {
     file.close();
 }
 
-void write_matrix(const string& filename, const Matrix& matrix, const int& rows, const int& columns, const double& time) {
+void write_matrix(const string& filename, const Matrix& matrix, const int& rows, 
+                const int& columns, const double& time, const long long& volume) {
     std::ofstream out_file(filename);
 
     if (!out_file.is_open()) {
@@ -58,7 +59,8 @@ void write_matrix(const string& filename, const Matrix& matrix, const int& rows,
 
     out_file << "rows: " << rows << std::endl;
     out_file << "columns: " << columns << std::endl;
-    out_file << "time: " << time/1000 << " s\n\n";
+    out_file << "time: " << time/1000 << " s" << std::endl;
+    out_file << "count multiply: " << volume << "\n\n";
 
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < columns; ++j) {
@@ -71,14 +73,15 @@ void write_matrix(const string& filename, const Matrix& matrix, const int& rows,
 }
 
 void multiply_matrix(Matrix& result, const Matrix& matrix1, const Matrix& matrix2,
-    const int rows1, const int columns1, const int columns2) {
-    
+    const int rows1, const int columns1, const int columns2, long long& volume) {
+
     result.resize(rows1);
     for (int i = 0; i < rows1; ++i) {
         for (int j = 0; j < columns2; ++j) {
             double sum = 0;
             for (int k = 0; k < columns1; ++k) {
                 sum += matrix1[i][k] * matrix2[k][j];
+                ++volume;
             }
             result[i].push_back(sum);
         }
@@ -104,16 +107,18 @@ int main() {
     }
 
     Matrix result;
+    long long volume_of_work = 0;
 
     auto start = high_resolution_clock::now();
-    multiply_matrix(result, matrix1, matrix2, rows1, columns1, columns2);
+    multiply_matrix(result, matrix1, matrix2, rows1, columns1, columns2, volume_of_work);
     auto end = high_resolution_clock::now();
 
     auto time = duration_cast<milliseconds>(end - start).count();
 
     std::cout << "rows: " << result.size() << std::endl;
     std::cout << "columns: " << result[0].size() << std::endl;
-    std::cout << "time: " << time/1000.0 << " s\n\n";
+    std::cout << "time: " << time/1000.0 << " s" << std::endl;
+    std::cout << "count multiply: " << volume_of_work << "\n\n";
 
     // for (int i = 0; i < result.size(); ++i) {
     //     for (int j = 0; j < result[i].size(); ++j) {
@@ -122,7 +127,7 @@ int main() {
     //     std::cout << std::endl;
     // }
 
-    write_matrix(PATH_RESULT, result, result.size(), result[0].size(), time);
+    write_matrix(PATH_RESULT, result, result.size(), result[0].size(), time, volume_of_work);
 
     return 0;
 }
